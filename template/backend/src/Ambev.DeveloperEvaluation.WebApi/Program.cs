@@ -8,6 +8,7 @@ using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.ORM.Repositories;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.WebApi.Mappings;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +44,13 @@ public class Program
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
             builder.Services.AddTransient<ISaleRepository, SaleRepository>();
+           
 
             builder.RegisterDependencies();
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
             builder.Services.AddAutoMapper(typeof(CreateSaleProfile).Assembly);
+            builder.Services.AddAutoMapper(typeof(CreateSaleRequestProfile).Assembly);
 
             builder.Services.AddMediatR(cfg =>
             {
