@@ -82,6 +82,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             var objectSale = await _context.Sales.FindAsync(new object[] { sale.Id }, cancellationToken);
             if (objectSale is null)
                 throw new KeyNotFoundException($"Sale with ID {sale.Id} not found.");
+
             _context.Entry(objectSale).CurrentValues.SetValues(sale);
             await _context.SaveChangesAsync(cancellationToken);
             return objectSale;
