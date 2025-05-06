@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
@@ -53,16 +54,18 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return true;
         }
 
+        //pagination
         public async Task<List<Sale>?> GetAllAsync(Sale sale, CancellationToken cancellationToken = default)
         {
             return await _context.Sales.ToListAsync(cancellationToken);
         }
 
+        //id
         public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Sales
-                .AsNoTracking()
-                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+                .Include(s => s.Items)
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
         public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
