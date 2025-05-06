@@ -10,5 +10,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public decimal UnitPrice { get; set; }
         public decimal Discount { get; set; }
         public bool IsCancelled { get; set; }
+
+        public Guid SaleId { get; set; }
     }
 }

@@ -24,6 +24,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
+            //next pass initialize validation and loggers
             CreateSaleResult result = new();
             var validator = new CreateSaleCommandValidator();
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -34,7 +35,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
             var sale = _mapper.Map<Sale>(command);
             result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
             return result;
-            
         }
     }
 }
