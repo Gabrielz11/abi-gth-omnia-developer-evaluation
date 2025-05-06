@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ambev.DeveloperEvaluation.WebApi.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250505162916_InitialMigration")]
+    [Migration("20250506184521_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -69,7 +69,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("SaleId")
+                    b.Property<Guid>("SaleId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("UnitPrice")
@@ -79,7 +79,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("SaleItem");
+                    b.ToTable("SaleItems");
                 });
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.User", b =>
@@ -134,7 +134,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
                 {
                     b.HasOne("Ambev.DeveloperEvaluation.Domain.Entities.Sale", null)
                         .WithMany("Items")
-                        .HasForeignKey("SaleId");
+                        .HasForeignKey("SaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.Sale", b =>

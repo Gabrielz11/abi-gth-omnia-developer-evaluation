@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Ambev.DeveloperEvaluation.Application.Users.CreateUser;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
@@ -29,21 +24,17 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
+            //next pass initialize validation and loggers
             CreateSaleResult result = new();
-            try
-            {
-                var sale = _mapper.Map<Sale>(command);
-                result.Id = sale.Id;
-                _logger.LogInformation($"[{objectName}]");
+            var validator = new CreateSaleCommandValidator();
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
-                 result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
-                return result;
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError($"[{objectName}] - Error: {ex.Message}", ex);
-                throw new DomainException("Deu Ruim." + ex);
-            }
+            if (!validationResult.IsValid)
+                throw new ValidationException(validationResult.Errors);
+
+            var sale = _mapper.Map<Sale>(command);
+            result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
+            return result;
         }
     }
 }

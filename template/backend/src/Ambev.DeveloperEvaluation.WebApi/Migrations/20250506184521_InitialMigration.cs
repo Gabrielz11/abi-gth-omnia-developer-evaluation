@@ -47,7 +47,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SaleItem",
+                name: "SaleItems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -56,21 +56,22 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
                     UnitPrice = table.Column<decimal>(type: "numeric", nullable: false),
                     Discount = table.Column<decimal>(type: "numeric", nullable: false),
                     IsCancelled = table.Column<bool>(type: "boolean", nullable: false),
-                    SaleId = table.Column<Guid>(type: "uuid", nullable: true)
+                    SaleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SaleItem", x => x.Id);
+                    table.PrimaryKey("PK_SaleItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SaleItem_Sales_SaleId",
+                        name: "FK_SaleItems_Sales_SaleId",
                         column: x => x.SaleId,
                         principalTable: "Sales",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_SaleItem_SaleId",
-                table: "SaleItem",
+                name: "IX_SaleItems_SaleId",
+                table: "SaleItems",
                 column: "SaleId");
         }
 
@@ -78,7 +79,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SaleItem");
+                name: "SaleItems");
 
             migrationBuilder.DropTable(
                 name: "Users");
