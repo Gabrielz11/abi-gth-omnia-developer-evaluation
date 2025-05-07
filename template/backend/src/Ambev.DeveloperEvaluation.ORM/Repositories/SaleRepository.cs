@@ -14,7 +14,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _context = context;
         }
 
-        //criar a venda
         public async Task<Sale> CreateAsync(Sale sale, CancellationToken cancellationToken = default)
         {
             await _context.Sales.AddAsync(sale, cancellationToken);
@@ -22,7 +21,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return sale;
         }
 
-        //deleta a venda e junto os itens da venda
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
@@ -36,7 +34,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return true;
         }
 
-        //cancela a venda
         public async Task<bool> CancelAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
@@ -55,7 +52,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
-        //cancelar o item da venda
+
         public async Task<bool> CancelItemAsync(Guid saleId,Guid itemId, CancellationToken cancellationToken = default)
         {
             var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == saleId, cancellationToken);
@@ -75,23 +72,21 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return true;
         }
 
-        //pagination
-        public async Task<List<Sale>?> GetAllAsync(Sale sale, CancellationToken cancellationToken = default)
+        public async Task<List<Sale>?> GetAllAsync(int? skip, int? take, CancellationToken cancellationToken = default)
         {
-            return await _context.Sales.ToListAsync(cancellationToken);
+            return await _context.Sales
+                 .OrderBy(key => key.Customer)
+                 .Include(s => s.Items)
+                 .Skip(skip ?? 0)
+                 .Take(take ?? 10)
+                 .ToListAsync(cancellationToken);
         }
 
-        //busca por id da venda
-        public async Task<List<Sale>?> GetByIdAsync(int? skipPage,int? takePage, CancellationToken cancellationToken = default)
+        public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var initialPage = skipPage.GetValueOrDefault(1);
-            var sizePage = takePage.GetValueOrDefault(10);
-
             return await _context.Sales
-                .OrderByDescending(key => key.Id)
-                .Skip((initialPage - 1) * sizePage)
-                .Take(sizePage)
-                .ToListAsync(cancellationToken);
+                .Include(s => s.Items)
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
         //updateAsync
