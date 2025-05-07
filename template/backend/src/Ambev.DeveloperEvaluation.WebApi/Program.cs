@@ -49,8 +49,7 @@ public class Program
             builder.RegisterDependencies();
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
-            builder.Services.AddAutoMapper(typeof(CreateSaleProfile).Assembly);
-            builder.Services.AddAutoMapper(typeof(CreateSaleRequestProfile).Assembly);
+   
 
             builder.Services.AddMediatR(cfg =>
             {

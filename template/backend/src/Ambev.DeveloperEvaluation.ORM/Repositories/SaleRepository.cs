@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Common.Security;
+﻿using System.Linq;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
@@ -54,13 +53,35 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return true;
         }
 
-        //pagination
-        public async Task<List<Sale>?> GetAllAsync(Sale sale, CancellationToken cancellationToken = default)
+        public async Task<bool> CancelItemAsync(Guid saleId,Guid itemId, CancellationToken cancellationToken = default)
         {
-            return await _context.Sales.ToListAsync(cancellationToken);
+            var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == saleId, cancellationToken);
+
+            if (sale is null)
+                return false;
+
+            var item = sale.Items.FirstOrDefault(key => key.Id == itemId);
+
+            if (item is null)
+                return false;
+
+            item.IsCancelled = true;
+
+            _context.Sales.Update(sale);
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
         }
 
-        //id
+        public async Task<List<Sale>?> GetAllAsync(int? skip, int? take, CancellationToken cancellationToken = default)
+        {
+            return await _context.Sales
+                 .OrderBy(key => key.Customer)
+                 .Include(s => s.Items)
+                 .Skip(skip ?? 0)
+                 .Take(take ?? 10)
+                 .ToListAsync(cancellationToken);
+        }
+
         public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Sales
@@ -68,6 +89,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
+        //updateAsync
         public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
         {
             var objectSale = await _context.Sales.FindAsync(new object[] { sale.Id }, cancellationToken);

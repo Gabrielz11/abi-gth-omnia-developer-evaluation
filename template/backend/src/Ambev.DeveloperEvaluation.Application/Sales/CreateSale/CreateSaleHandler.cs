@@ -4,7 +4,6 @@ using AutoMapper;
 using MediatR;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Diagnostics;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
