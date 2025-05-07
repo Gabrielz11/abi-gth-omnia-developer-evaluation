@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Common.Security;
+﻿using System.Linq;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
@@ -15,6 +14,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _context = context;
         }
 
+        //criar a venda
         public async Task<Sale> CreateAsync(Sale sale, CancellationToken cancellationToken = default)
         {
             await _context.Sales.AddAsync(sale, cancellationToken);
@@ -22,6 +22,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return sale;
         }
 
+        //deleta a venda e junto os itens da venda
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
@@ -35,6 +36,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return true;
         }
 
+        //cancela a venda
         public async Task<bool> CancelAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
@@ -53,6 +55,25 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
+        //cancelar o item da venda
+        public async Task<bool> CancelItemAsync(Guid saleId,Guid itemId, CancellationToken cancellationToken = default)
+        {
+            var sale = await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == saleId, cancellationToken);
+
+            if (sale is null)
+                return false;
+
+            var item = sale.Items.FirstOrDefault(key => key.Id == itemId);
+
+            if (item is null)
+                return false;
+
+            item.IsCancelled = true;
+
+            _context.Sales.Update(sale);
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
+        }
 
         //pagination
         public async Task<List<Sale>?> GetAllAsync(Sale sale, CancellationToken cancellationToken = default)
@@ -60,14 +81,20 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return await _context.Sales.ToListAsync(cancellationToken);
         }
 
-        //id
-        public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        //busca por id da venda
+        public async Task<List<Sale>?> GetByIdAsync(int? skipPage,int? takePage, CancellationToken cancellationToken = default)
         {
+            var initialPage = skipPage.GetValueOrDefault(1);
+            var sizePage = takePage.GetValueOrDefault(10);
+
             return await _context.Sales
-                .Include(s => s.Items)
-                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+                .OrderByDescending(key => key.Id)
+                .Skip((initialPage - 1) * sizePage)
+                .Take(sizePage)
+                .ToListAsync(cancellationToken);
         }
 
+        //updateAsync
         public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
         {
             var objectSale = await _context.Sales.FindAsync(new object[] { sale.Id }, cancellationToken);
