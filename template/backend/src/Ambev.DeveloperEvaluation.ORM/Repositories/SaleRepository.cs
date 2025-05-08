@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
@@ -90,15 +91,33 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         //updateAsync
-        public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
+        public async Task<Sale> UpdateAsync(Sale saleRequest, CancellationToken cancellationToken = default)
         {
-            var objectSale = await _context.Sales.FindAsync(new object[] { sale.Id }, cancellationToken);
-            if (objectSale is null)
-                throw new KeyNotFoundException($"Sale with ID {sale.Id} not found.");
+            var existingSale = await _context.Sales
+             .Include(s => s.Items)
+             .FirstOrDefaultAsync(s => s.Id == saleRequest.Id, cancellationToken);
 
-            _context.Entry(objectSale).CurrentValues.SetValues(sale);
+            if (existingSale == null)
+                throw new KeyNotFoundException($"Sale with ID {saleRequest.Id} not found.");
+
+            existingSale.Customer = saleRequest.Customer;
+            existingSale.Branch = saleRequest.Branch;
+            existingSale.Date = saleRequest.Date;
+            for (int i = 0; i < saleRequest.Items.Count; i++)
+            {
+                existingSale.Items[i].Product = saleRequest.Items[i].Product;
+                existingSale.Items[i].Quantity = saleRequest.Items[i].Quantity;
+                existingSale.Items[i].UnitPrice = saleRequest.Items[i].UnitPrice;
+                existingSale.Items[i].Discount = saleRequest.Items[i].Discount;
+                existingSale.Items[i].IsCancelled = saleRequest.Items[i].IsCancelled;
+            }
+            existingSale.TotalAmount = saleRequest.TotalAmount;
+            existingSale.IsCancelled = saleRequest.IsCancelled;
+
+            _context.Sales.Update(existingSale);
             await _context.SaveChangesAsync(cancellationToken);
-            return objectSale;
+            return existingSale;
         }
+
     }
 }

@@ -9,5 +9,7 @@
         public List<SaleItem> Items { get; set; } = new();
         public decimal TotalAmount { get; set; }
         public bool IsCancelled { get; set; }
+
     }
+
 }
