@@ -2,7 +2,7 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 
-public record GetSaleCommand : IRequest<GetSaleResult>
+public class GetSaleCommand : IRequest<GetSaleResult>
 {
 
     public Guid Id { get; }
