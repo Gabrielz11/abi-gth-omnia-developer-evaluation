@@ -6,6 +6,7 @@ using MediatR;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using Ambev.DeveloperEvaluation.Domain.Events;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
@@ -13,14 +14,16 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
     {
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
+        private readonly CreateSaleNotification _notificationSale;
         private readonly ILogger<CreateSaleHandler> _logger;
         private readonly string Handler = nameof(CreateSaleHandler);
 
-        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, ILogger<CreateSaleHandler> logger)
+        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper,CreateSaleNotification notificationSale, ILogger<CreateSaleHandler> logger)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
             _logger = logger;
+            _notificationSale = notificationSale;
         }
 
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
@@ -54,6 +57,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
                     throw new DomainException("Cannot apply discount on items with quantity less than 4 or with fewer than 4 items.");
                 }
                 result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
+                var notify = _notificationSale.Notification(new SaleCreatedEvent(sale));
+                _logger.LogInformation($"{Handler} - {notify}");
             }
             catch (Exception ex)
             {
