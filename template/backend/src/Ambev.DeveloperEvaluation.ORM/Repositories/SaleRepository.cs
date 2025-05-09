@@ -77,7 +77,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         {
             return await _context.Sales
                  .OrderBy(key => key.Customer)
-                 .Include(s => s.Items)
                  .Skip(skip ?? 0)
                  .Take(take ?? 10)
                  .ToListAsync(cancellationToken);
