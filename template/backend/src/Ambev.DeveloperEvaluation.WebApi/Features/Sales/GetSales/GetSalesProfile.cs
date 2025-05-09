@@ -10,10 +10,8 @@ public class GetSalesProfile : Profile
 {
     public GetSalesProfile()
     {
-        CreateMap<GetSalesRequest, GetSalesCommand>()
-            .ForMember(dest => dest.Skip, from => from.MapFrom(key => key.Skip ?? 0))
-            .ForMember(dest => dest.Take, from => from.MapFrom(key => key.Take ?? 10));
+        CreateMap<GetSalesRequest, GetSalesCommand>();
         CreateMap<GetSalesResult, GetSalesResponse>();
-        CreateMap<GetSaleItemResult, GetSaleItemResponse>();
+        CreateMap<GetSaleItemResult, GetSaleResponse.GetSaleItemResponse>();
     }
 }

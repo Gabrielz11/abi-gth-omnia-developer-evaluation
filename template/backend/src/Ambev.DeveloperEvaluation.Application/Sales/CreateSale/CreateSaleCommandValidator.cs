@@ -6,12 +6,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
     {
         public CreateSaleCommandValidator() 
         {
-            RuleFor(sale => sale.Date).NotNull().WithMessage("Date cannot be empty.");
-            RuleFor(sale => sale.Customer).NotNull().WithMessage("Customer cannot be empty.");
-            RuleFor(sale => sale.Branch).NotNull().WithMessage("Branch cannot be empty.");
+            RuleFor(sale => sale.Date).NotEmpty().WithMessage("Date cannot be empty.");
+            RuleFor(sale => sale.Customer).NotEmpty().WithMessage("Customer cannot be empty.");
+            RuleFor(sale => sale.Branch).NotEmpty().WithMessage("Branch cannot be empty.");
             RuleFor(sale => sale.Items).NotEmpty().WithMessage("Sales must have minimum 1 item.");
-            RuleFor(sale => sale.TotalAmount).NotNull().WithMessage("Total Amount cannot be empty.");
-            RuleFor(sale => sale.IsCancelled).NotNull().WithMessage("Cancellation flag cannot be empty.");
+            RuleFor(sale => sale.TotalAmount).NotEmpty().WithMessage("Total Amount cannot be empty.");
+            RuleFor(sale => sale.IsCancelled).NotEmpty().WithMessage("Cancellation flag cannot be empty.");
         }
     }
 }

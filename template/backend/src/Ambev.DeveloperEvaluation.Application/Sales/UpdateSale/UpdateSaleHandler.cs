@@ -15,7 +15,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<UpdateSaleHandler> _logger;
-        private readonly string objectName = nameof(UpdateSaleHandler);
         public UpdateSaleHandler(ISaleRepository saleRepository, IMapper mapper, ILogger<UpdateSaleHandler> logger)
         {
             _saleRepository = saleRepository;
