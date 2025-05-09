@@ -13,7 +13,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         private readonly IMapper _mapper;
         private readonly ILogger<CreateSaleHandler> _logger;
 
-        private readonly string objectName = nameof(CreateSaleHandler);
         public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, ILogger<CreateSaleHandler> logger)
         {
             _saleRepository = saleRepository;
@@ -23,16 +22,28 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
-            //next pass initialize validation and loggers
             CreateSaleResult result = new();
-            var validator = new CreateSaleCommandValidator();
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            try
+            {
+                var validator = new CreateSaleCommandValidator();
+                var validationResult = await validator.ValidateAsync(command, cancellationToken);
 
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+                if (!validationResult.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, "Error of Validation");
+                    throw new ValidationException(validationResult.Errors);
+                }
 
-            var sale = _mapper.Map<Sale>(command);
-            result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
+                var sale = _mapper.Map<Sale>(command);
+                result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro to Create Sale.");
+                throw new Exception(ex.Message);
+            }
+            _logger.LogInformation("Create Successful");
             return result;
         }
     }

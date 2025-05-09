@@ -17,8 +17,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSales
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<GetSalesHandler> _logger;
-        private readonly string objectName = nameof(GetSalesHandler);
-
+    
         public GetSalesHandler(ISaleRepository saleRepository, IMapper mapper, ILogger<GetSalesHandler> logger)
         {
             _saleRepository = saleRepository;
