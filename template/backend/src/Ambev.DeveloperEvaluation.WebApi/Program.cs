@@ -7,7 +7,6 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.ORM.Repositories;
-using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Mappings;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
@@ -43,7 +42,7 @@ public class Program
             );
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
-            builder.Services.AddTransient<ISaleRepository, SaleRepository>();
+           
            
 
             builder.RegisterDependencies();

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ambev.DeveloperEvaluation.WebApi.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250508185528_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250509180242_InitialMigrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,13 +132,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.SaleItem", b =>
                 {
-                    b.HasOne("Ambev.DeveloperEvaluation.Domain.Entities.Sale", "Sale")
+                    b.HasOne("Ambev.DeveloperEvaluation.Domain.Entities.Sale", null)
                         .WithMany("Items")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Sale");
                 });
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.Sale", b =>

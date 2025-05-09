@@ -11,6 +11,5 @@
 
         public Guid SaleId { get; set; }
 
-        public Sale Sale { get; set; } = null!;
     }
 }

@@ -129,13 +129,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Migrations
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.SaleItem", b =>
                 {
-                    b.HasOne("Ambev.DeveloperEvaluation.Domain.Entities.Sale", "Sale")
+                    b.HasOne("Ambev.DeveloperEvaluation.Domain.Entities.Sale", null)
                         .WithMany("Items")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Sale");
                 });
 
             modelBuilder.Entity("Ambev.DeveloperEvaluation.Domain.Entities.Sale", b =>

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.EntityFrameworkCore;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {
@@ -26,6 +27,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
         {
             UpdateSaleResult result = new();
             var sale = _mapper.Map<Sale>(request);
+            sale.CalculateTotalAmount();
+            request.TotalAmount = sale.TotalAmount;
             var updatedSale = await _saleRepository.UpdateAsync(sale, cancellationToken);
             result = _mapper.Map<UpdateSaleResult>(await _saleRepository.UpdateAsync(sale, cancellationToken));
 
