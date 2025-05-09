@@ -54,29 +54,29 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
             });
         }
 
+        //[HttpDelete("{id}")]
+        //[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
+        //{
+        //    var request = new DeleteSaleRequest { Id = id };
+        //    var validator = new DeleteSaleRequestValidator();
+        //    var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        //    if (!validationResult.IsValid)
+        //        return BadRequest(validationResult.Errors);
+
+        //    var command = new DeleteSaleCommand(request.Id);
+        //    await _mediator.Send(command, cancellationToken);
+
+        //    return Ok(new ApiResponse
+        //    {
+        //        Success = true,
+        //        Message = "Sale deleted successfully"
+        //    });
+        //}
+
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
-        {
-            var request = new DeleteSaleRequest { Id = id };
-            var validator = new DeleteSaleRequestValidator();
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var command = new DeleteSaleCommand(request.Id);
-            await _mediator.Send(command, cancellationToken);
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "Sale deleted successfully"
-            });
-        }
-
-        [HttpPatch("{id}")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CancelSale([FromRoute] Guid id, CancellationToken cancellationToken)
@@ -98,7 +98,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
             });
         }
 
-        [HttpPatch("{id}/items/{itemId}")]
+        [HttpDelete("{id}/items/{itemId}")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CancelItemSale([FromRoute] Guid id, [FromRoute] Guid itemId, CancellationToken cancellationToken)
@@ -159,7 +159,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
             });
         }
 
-        //update complete sale
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponseWithData<UpdateSaleResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
