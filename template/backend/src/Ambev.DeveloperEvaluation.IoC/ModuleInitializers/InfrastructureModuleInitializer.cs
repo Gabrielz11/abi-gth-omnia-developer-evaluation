@@ -1,4 +1,7 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.CancelItemSale;
+using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
+using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.ORM.Repositories;
@@ -16,5 +19,8 @@ public class InfrastructureModuleInitializer : IModuleInitializer
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddTransient<ISaleRepository, SaleRepository>();
         builder.Services.AddTransient<CreateSaleNotification>();
+        builder.Services.AddTransient<UpdateSaleNotification>();
+        builder.Services.AddTransient<CancelSaleNotification>();
+        builder.Services.AddTransient<CancelItemSaleNotification>();
     }
 }

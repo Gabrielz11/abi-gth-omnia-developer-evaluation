@@ -11,16 +11,16 @@ namespace Ambev.DeveloperEvaluation.Domain.Services
             {
                 var message = JsonSerializer.Serialize(new
                 {
-                    Event = nameof(@event),
+                    Event = @event.GetType().Name,
                     Data = JsonSerializer.Serialize(@event),
                     Timestamp = DateTime.UtcNow
                 });
                 Console.WriteLine(message);
-                return $"Event {nameof(@event)} ID: {@event.Id}, Content {@event.Data} to Message Broker made with sucess.";
+                return $"Event {@event.GetType().Name} ID: {@event.Id}, Content {@event.Data} published successfully.";
             }
             catch (Exception ex)
             {
-                return $"Publishing event {nameof(@event)} ID: {@event.Id}, Content {@event.Data} returned error:{ex.Message}";
+                return $"Error publishing event {@event.GetType().Name} ID: {@event.Id}, Content {@event.Data}: {ex.Message}";
             }
         }
     }

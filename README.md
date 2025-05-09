@@ -1,86 +1,135 @@
-# Developer Evaluation Project
+# Ambev Developer Evaluation - Estrutura de Estudo
 
-`READ CAREFULLY`
+Este projeto é uma estrutura base desenvolvida com o propósito de estudo e avaliação técnica. Ele contém uma API com .NET, banco de dados PostgreSQL, MongoDB, Redis e Docker. Pode ser utilizado localmente tanto com containers quanto com serviços instalados na máquina.
 
-## Instructions
-**The test below will have up to 7 calendar days to be delivered from the date of receipt of this manual.**
+---
 
-- The code must be versioned in a public Github repository and a link must be sent for evaluation once completed
-- Upload this template to your repository and start working from it
-- Read the instructions carefully and make sure all requirements are being addressed
-- The repository must provide instructions on how to configure, execute and test the project
-- Documentation and overall organization will also be taken into consideration
+### Descrição do teste [aqui](/TesteDescription.md).
 
-## Use Case
-**You are a developer on the DeveloperStore team. Now we need to implement the API prototypes.**
+## 🚀 Tecnologias Utilizadas
 
-As we work with `DDD`, to reference entities from other domains, we use the `External Identities` pattern with denormalization of entity descriptions.
+- .NET 8+
+- PostgreSQL 13
+- MongoDB 8
+- Redis 7.4
+- Docker e Docker Compose
+- Git Flow
 
-Therefore, you will write an API (complete CRUD) that handles sales records. The API needs to be able to inform:
+---
+## 📦 Pré-requisitos
 
-* Sale number
-* Date when the sale was made
-* Customer
-* Total sale amount
-* Branch where the sale was made
-* Products
-* Quantities
-* Unit prices
-* Discounts
-* Total amount for each item
-* Cancelled/Not Cancelled
+- [.NET SDK 8+](https://dotnet.microsoft.com/en-us/download)
+- [Docker e Docker Compose](https://www.docker.com/products/docker-desktop/)
+- [DBeaver (opcional)](https://dbeaver.io/) - Cliente visual para bancos de dados
+- [GitHub Desktop (opcional)](https://desktop.github.com/) - Interface visual para Git
 
-It's not mandatory, but it would be a differential to build code for publishing events of:
-* SaleCreated
-* SaleModified
-* SaleCancelled
-* ItemCancelled
+---
+## 📌 Estrutura do Projeto
+```
+📂 template
+ ┣ 📂 backend             # Repositório principal
+ ┃ ┣ 📂 src               # Lógica da API
+ ┃ ┃ ┣ 📂 Application     # Regras de negócio
+ ┃ ┃ ┣ 📂 Common          # Utilidades Globais
+ ┃ ┃ ┣ 📂 Domain          # Regras de Domínio
+ ┃ ┃ ┣ 📂 ORM             # Persistência de Dados
+ ┃ ┃ ┣ 📂 Ioc             # Injeção de Dependência
+ ┃ ┃ ┗ 📂 WebApi          # Interface da API
+ ┃ ┣ 📂 tests             # Repositório de testes
+ ┃ ┗ ┣ 📂 Functional      # Testes Funcionais
+ ┃   ┣ 📂 Integration     # Testes de Integração
+ ┃   ┗ 📂 Unit            # Testes Unitários
+ ┗
+```
 
-If you write the code, **it's not required** to actually publish to any Message Broker. You can log a message in the application log or however you find most convenient.
+## ⚙️ Rodando o Projeto Localmente
 
-### Business Rules
+### ✅ Usando Docker
 
-* Purchases above 4 identical items have a 10% discount
-* Purchases between 10 and 20 identical items have a 20% discount
-* It's not possible to sell above 20 identical items
-* Purchases below 4 items cannot have a discount
+1. Clone o repositório:
 
-These business rules define quantity-based discounting tiers and limitations:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+   cd seu-repositorio
+   ```
+2. Execute o .sln na pasta template > backend
+3. Dentro do visual studio abra o terminal da solução e faça o passo 4.
+4. Execute o Docker Compose : Fique a tento ao item do PostgreSQL logo abaixo:
 
-1. Discount Tiers:
-   - 4+ items: 10% discount
-   - 10-20 items: 20% discount
+   ```bash
+   docker-compose up --build
+   ```
+5. Após rodar e subir os containers, teste a solução execute o sistema.
+6. Agora segue os demais passos abaixo:
 
-2. Restrictions:
-   - Maximum limit: 20 items per product
-   - No discounts allowed for quantities below 4 items
+### ✅ Usando PostgreSQL Instalado Localmente
 
-## Overview
-This section provides a high-level overview of the project and the various skills and competencies it aims to assess for developer candidates. 
+⚠️ Caso opte por usar o PostgreSQL local (sem Docker), será necessário alterar a `connection string` no `appsettings.json`.
 
-See [Overview](/.doc/overview.md)
+Exemplo:
+```json
+"DefaultConnection": "Server=localhost;Database=developer_evaluation;User Id=sa;Password=sua_senha;TrustServerCertificate=True"
+```
+Também é necessário garantir que a **porta 5432** da sua máquina esteja igual à configurada no container - pode alterar o do docker-compose.yml para garantir **5432:5432**.
 
-## Tech Stack
-This section lists the key technologies used in the project, including the backend, testing, frontend, and database components. 
+---
 
-See [Tech Stack](/.doc/tech-stack.md)
+## 🛠️ Configurações Adicionais
 
-## Frameworks
-This section outlines the frameworks and libraries that are leveraged in the project to enhance development productivity and maintainability. 
+### 🧩 Pacotes Necessários
+Certifique-se de instalar os seguintes pacotes NuGet se for trabalhar somente com o PostgreSQL: 
 
-See [Frameworks](/.doc/frameworks.md)
+Utilizei versão compatível com o teste.
+```bash
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+dotnet add package Microsoft.EntityFrameworkCore.Design 
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+```
+### 📌 Migrations
 
-<!-- 
-## API Structure
-This section includes links to the detailed documentation for the different API resources:
-- [API General](./docs/general-api.md)
-- [Products API](/.doc/products-api.md)
-- [Carts API](/.doc/carts-api.md)
-- [Users API](/.doc/users-api.md)
-- [Auth API](/.doc/auth-api.md)
--->
+Após configurar a string de conexão e garantir que o banco está ativo, execute:
 
-## Project Structure
-This section describes the overall structure and organization of the project files and directories. 
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+Você pode verificar a criação das tabelas usando ferramentas como **DBeaver**.
 
-See [Project Structure](/.doc/project-structure.md)
+---
+## AGORA SÓ TESTAR A API
+
+## 🧠 Dicas de Ferramentas
+
+- 🏦 **DBeaver**: Cliente gráfico para PostgreSQL e MongoDB. Muito prático para visualizar estrutura de tabelas.
+- 🐙 **GitHub Desktop**: Interface amigável para gerenciar branches e commits.
+- 🐳 **Docker Desktop**: Facilita a visualização de containers ativos.
+
+## 🌱 Git Flow Sugerido
+
+### Fluxo Atual
+
+- `main` (produção)
+- `dev` (desenvolvimento)
+
+### Fluxo Recomendado para Projetos Profissionais
+
+| Branch         | Finalidade                                  |
+|----------------|---------------------------------------------|
+| `main`         | Código estável em produção                  |
+| `dev`          | Código de desenvolvimento integrado         |
+| `staging`      | Código réplica do main de produção          |
+| `feature/*`    | Implementação de novas funcionalidades      |
+| `hotfix/*`     | Correções críticas em produção              |
+| `release/*`    | Preparação de versões para produção         |
+
+Nessa estrutura fica bem possível utilização de PRs para Code Review.
+
+## ⭐ Curiosidade
+Esse README foi feito no [readme.so](https://readme.so/pt/editor)
+
+## 📜 Licença
+
+Este projeto é de uso livre para fins de estudo.
+
+
+

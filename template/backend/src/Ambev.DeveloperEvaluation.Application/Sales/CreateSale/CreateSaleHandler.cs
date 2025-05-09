@@ -57,7 +57,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
                     throw new DomainException("Cannot apply discount on items with quantity less than 4 or with fewer than 4 items.");
                 }
                 result = _mapper.Map<CreateSaleResult>(await _saleRepository.CreateAsync(sale, cancellationToken));
-                var notify = _notificationSale.Notification(new SaleCreatedEvent(sale));
+                var notify = _notificationSale.Notification(new SaleCreated(sale));
                 _logger.LogInformation($"{Handler} - {notify}");
             }
             catch (Exception ex)

@@ -3,9 +3,9 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Domain.Events
 {
-    public class SaleCreatedEvent : BaseEvent
+    public class SaleItemCancelled : BaseEvent
     {
-        public SaleCreatedEvent(Sale sale) : base(sale)
+        public SaleItemCancelled(Sale sale):base(sale) 
         {
 
         }
