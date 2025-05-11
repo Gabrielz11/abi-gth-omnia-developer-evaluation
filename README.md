@@ -3,17 +3,28 @@
 Este projeto é uma estrutura base desenvolvida com o propósito de estudo e avaliação técnica. Ele contém uma API com .NET, banco de dados PostgreSQL, MongoDB, Redis e Docker. Pode ser utilizado localmente tanto com containers quanto com serviços instalados na máquina.
 
 ---
+🎯 Objetivo
+Desenvolver uma API RESTful completa (CRUD) para gerenciamento de registros de vendas, simulando um cenário real dentro de um time chamado “DeveloperStore”. O projeto segue princípios de DDD (Domain-Driven Design) e padrões como Identidade Externa com Desnormalização.
+
+📜 Regras de Negócio
+As vendas devem seguir as seguintes regras de descontos por quantidade:
+
+4 a 9 unidades do mesmo item: 10% de desconto
+10 a 20 unidades: 20% de desconto
+Acima de 20 unidades: não permitido
+Abaixo de 4 unidades: sem desconto permitido
 
 ### Descrição do teste [aqui](.doc/TesteDescription.md).
 
 ## 🚀 Tecnologias Utilizadas
 
 - .NET 8+
-- PostgreSQL 13
-- MongoDB 8
-- Redis 7.4
+- PostgreSQL
 - Docker e Docker Compose
-- Git Flow
+- Git Flow - (GitHub Desktop)
+- Visual Studio (IDE)
+- Postman
+- Dbeaver (SGBD)
 
 ---
 ## 📦 Pré-requisitos
