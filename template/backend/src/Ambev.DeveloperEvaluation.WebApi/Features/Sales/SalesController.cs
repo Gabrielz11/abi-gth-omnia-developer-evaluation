@@ -25,7 +25,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-
         public SalesController (IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
@@ -53,73 +52,22 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
                 Data = _mapper.Map<CreateSaleResponse>(response)
             });
         }
-
-        //[HttpDelete("{id}")]
-        //[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
-        //{
-        //    var request = new DeleteSaleRequest { Id = id };
-        //    var validator = new DeleteSaleRequestValidator();
-        //    var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        //    if (!validationResult.IsValid)
-        //        return BadRequest(validationResult.Errors);
-
-        //    var command = new DeleteSaleCommand(request.Id);
-        //    await _mediator.Send(command, cancellationToken);
-
-        //    return Ok(new ApiResponse
-        //    {
-        //        Success = true,
-        //        Message = "Sale deleted successfully"
-        //    });
-        //}
-
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseWithData<GetSalesResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CancelSale([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetSales([FromQuery] GetSalesRequest request, CancellationToken cancellationToken)
         {
-            var request = new CancelSaleRequest { Id = id };
-            var validator = new CancelSaleRequestValidator();
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            var command = _mapper.Map<GetSalesCommand>(request);
+            var response = await _mediator.Send(command, cancellationToken);
 
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var command = new CancelSaleCommand(request.Id);
-            await _mediator.Send(command, cancellationToken);
-
-            return Ok(new ApiResponse
+            return Ok(new ApiResponseWithData<GetSalesResponse>
             {
                 Success = true,
-                Message = "Sale marked with canceled successfully"
+                Message = "Sale retrieved successfully",
+                Data = _mapper.Map<GetSalesResponse>(response)
             });
         }
 
-        [HttpDelete("{id}/items/{itemId}")]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CancelItemSale([FromRoute] Guid id, [FromRoute] Guid itemId, CancellationToken cancellationToken)
-        {
-            var request = new CancelItemSaleRequest { Id = id, ItemId = itemId};
-            var validator = new CancelItemSaleRequestValidator();
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var command = new CancelItemSaleCommand(request.Id,request.ItemId);
-            await _mediator.Send(command, cancellationToken);
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "Item marked with canceled successfully"
-            });
-        }
-       
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -140,22 +88,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
                 Success = true,
                 Message = "Sale retrieved successfully",
                 Data = _mapper.Map<GetSaleResponse>(response)
-            });
-        }
-       
-        [HttpGet]
-        [ProducesResponseType(typeof(ApiResponseWithData<GetSalesResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetSales([FromQuery] GetSalesRequest request, CancellationToken cancellationToken)
-        {
-            var command = _mapper.Map<GetSalesCommand>(request);
-            var response = await _mediator.Send(command, cancellationToken);
-
-            return Ok(new ApiResponseWithData<GetSalesResponse>
-            {
-                Success = true,
-                Message = "Sale retrieved successfully",
-                Data = _mapper.Map<GetSalesResponse>(response)
             });
         }
 
@@ -179,6 +111,72 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
                 Success = true,
                 Message = "Sale updated successfully",
                 Data = _mapper.Map<UpdateSaleResponse>(response)
+            });
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var request = new DeleteSaleRequest { Id = id };
+            var validator = new DeleteSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = new DeleteSaleCommand(request.Id);
+            await _mediator.Send(command, cancellationToken);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Sale deleted successfully"
+            });
+        }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CancelSale([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var request = new CancelSaleRequest { Id = id };
+            var validator = new CancelSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = new CancelSaleCommand(request.Id);
+            await _mediator.Send(command, cancellationToken);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Sale marked with canceled successfully"
+            });
+        }
+
+        [HttpPatch("{id}/items/{itemId}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CancelItemSale([FromRoute] Guid id, [FromRoute] Guid itemId, CancellationToken cancellationToken)
+        {
+            var request = new CancelItemSaleRequest { Id = id, ItemId = itemId };
+            var validator = new CancelItemSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = new CancelItemSaleCommand(request.Id, request.ItemId);
+            await _mediator.Send(command, cancellationToken);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Item marked with canceled successfully"
             });
         }
 

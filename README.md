@@ -4,7 +4,7 @@ Este projeto é uma estrutura base desenvolvida com o propósito de estudo e ava
 
 ---
 
-### Descrição do teste [aqui](/TesteDescription.md).
+### Descrição do teste [aqui](.doc/TesteDescription.md).
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -54,13 +54,16 @@ Este projeto é uma estrutura base desenvolvida com o propósito de estudo e ava
    ```
 2. Execute o .sln na pasta template > backend
 3. Dentro do visual studio abra o terminal da solução e faça o passo 4.
-4. Execute o Docker Compose : Fique a tento ao item do PostgreSQL logo abaixo:
+4. Execute o Docker Compose : Fique a tento ao item do **PostgreSQL** logo abaixo **Primeiro execute ele e depois os pacotes necessários e volte a esse passo**:
 
    ```bash
    docker-compose up --build
    ```
-5. Após rodar e subir os containers, teste a solução execute o sistema.
-6. Agora segue os demais passos abaixo:
+5. Após rodar e subir os containers, execute as migrations
+6. teste a solução execute o sistema.
+7. Agora segue os demais passos abaixo:
+
+### Descrição da API com os EndPoints [aqui](.doc/sale.api.md).
 
 ### ✅ Usando PostgreSQL Instalado Localmente
 
