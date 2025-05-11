@@ -16,13 +16,11 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSales
     {
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger<GetSalesHandler> _logger;
     
-        public GetSalesHandler(ISaleRepository saleRepository, IMapper mapper, ILogger<GetSalesHandler> logger)
+        public GetSalesHandler(ISaleRepository saleRepository, IMapper mapper)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<GetSalesResult> Handle(GetSalesCommand command, CancellationToken cancellationToken)
