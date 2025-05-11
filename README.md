@@ -63,7 +63,7 @@ Este projeto é uma estrutura base desenvolvida com o propósito de estudo e ava
 6. teste a solução execute o sistema.
 7. Agora segue os demais passos abaixo:
 
-### Descrição da API com os EndPoints [aqui](.doc/sale.api.md).
+### Descrição da API com os EndPoints [aqui](.doc/sale-api.md).
 
 ### ✅ Usando PostgreSQL Instalado Localmente
 
